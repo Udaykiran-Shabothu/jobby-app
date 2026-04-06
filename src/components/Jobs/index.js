@@ -20,6 +20,14 @@ const appConstants = {
   failure: 'FAILURE',
 }
 
+const locationsList = [
+  {label: 'Hyderabad', locationId: 'Hyderabad'},
+  {label: 'Bangalore', locationId: 'Bangalore'},
+  {label: 'Chennai', locationId: 'Chennai'},
+  {label: 'Delhi', locationId: 'Delhi'},
+  {label: 'Mumbai', locationId: 'Mumbai'},
+]
+
 const employmentTypesList = [
   {
     label: 'Full Time',
@@ -64,6 +72,7 @@ class Jobs extends Component {
     profileData: null,
     checkboxArray: [],
     radioValue: '',
+    locationArray: [],
     appStatus: appConstants.initial,
     jobData: '',
   }
@@ -140,11 +149,13 @@ class Jobs extends Component {
   )
 
   getJobDetails = async () => {
-    const {checkboxArray, radioValue, searchInput} = this.state
+    const {checkboxArray, radioValue, searchInput, locationArray} = this.state
     const checkboxString =
       checkboxArray.length !== 0 ? checkboxArray.join(',') : ''
     const jwtToken = Cookies.get('jwt_token')
-    const url = `https://apis.ccbp.in/jobs?employment_type=${checkboxString}&minimum_package=${radioValue}&search=${searchInput}`
+    const locationString =
+      locationArray.length !== 0 ? locationArray.join(',') : ''
+    const url = `https://apis.ccbp.in/jobs?employment_type=${checkboxString}&minimum_package=${radioValue}&search=${searchInput}&location=${locationString}`
     const options = {
       method: 'GET',
       headers: {
@@ -278,6 +289,26 @@ class Jobs extends Component {
     }
   }
 
+  locationEvent = e => {
+    if (e.target.checked) {
+      this.setState(
+        prevState => ({
+          locationArray: [...prevState.locationArray, e.target.value],
+        }),
+        this.getJobDetails,
+      )
+    } else {
+      this.setState(
+        prevState => ({
+          locationArray: prevState.locationArray.filter(
+            each => each !== e.target.value,
+          ),
+        }),
+        this.getJobDetails,
+      )
+    }
+  }
+
   radioEvent = e => {
     if (e.target.checked) {
       this.setState({radioValue: e.target.value}, this.getJobDetails)
@@ -359,6 +390,23 @@ class Jobs extends Component {
                   />
                   <label htmlFor={eachValue.salaryRangeId} className="label">
                     {eachValue.label}
+                  </label>
+                </li>
+              ))}
+            </ul>
+            <hr />
+            <h1 className="filter-name">Location</h1>
+            <ul className="ul-list">
+              {locationsList.map(each => (
+                <li className="check-box-holder" key={each.locationId}>
+                  <input
+                    type="checkbox"
+                    id={each.locationId}
+                    value={each.locationId}
+                    onChange={this.locationEvent}
+                  />
+                  <label htmlFor={each.locationId} className="label">
+                    {each.label}
                   </label>
                 </li>
               ))}

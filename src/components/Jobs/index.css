@@ -24,9 +24,13 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  height: 100%;
+
   width: 25%;
   padding: 20px;
+
+  position: sticky;   
+  top: 80px;          
+  height: fit-content;
 }
 
 .success-profile-container {

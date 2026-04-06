@@ -3,11 +3,16 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+
   width: 100%;
   height: 80px;
   padding-left: 20px;
   padding-right: 40px;
   background-color: #272727;
+
+  position: sticky;   
+  top: 0;             
+  z-index: 1000;      
 }
 
 .header-website-logo {
